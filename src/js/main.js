@@ -1,8 +1,9 @@
 import pako from 'pako';
 import { createObjectUrl } from './uint8array-utils';
 import { open, save, get } from './database';
+import { add } from './files';
 
-const { Deflate, Inflate } = pako;
+const { Inflate } = pako;
 const $ = (selector) => document.querySelectorAll(selector);
 const inputFile = $('#inputFile');
 const img = $('#img');
@@ -21,26 +22,5 @@ database
   })
   .then(url => img[0].src = url);
 
-inputFile[0].addEventListener('change', (event) => {
-  const files = Array.from(event.target.files);
-
-  files.forEach(file => {
-    const reader = new FileReader();
-
-    reader.addEventListener('loadend', () => {
-      const result = reader.result
-      const deflate = new Deflate({ level: 9 });     
-
-      deflate.push(reader.result, true);
-      const compressed = deflate.result;      
-
-      database.then(db => save(db, 'Resources', {
-        name: file.name,
-        type: file.type,
-        buffer: compressed
-      }));
-    });
-
-    reader.readAsArrayBuffer(file)
-  })
-});
+inputFile[0].addEventListener('change', (event) =>
+  add(event.target.files));
