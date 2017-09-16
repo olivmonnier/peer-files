@@ -1,8 +1,10 @@
 
 import pako from 'pako';
+import { save } from './database';
+
 const { Deflate } = pako;
 
-function add(files) {
+function add(database, files) {
   let fs = Array.isArray(files) ? files : Array.from(files);
 
   fs.forEach(file => {
