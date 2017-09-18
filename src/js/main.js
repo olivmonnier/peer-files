@@ -7,6 +7,7 @@ const { Inflate } = pako;
 const $ = (selector) => document.querySelectorAll(selector);
 const inputFile = $('#inputFile');
 const img = $('#img');
+const video = $('#video');
 const database = open('LocalDb');
 
 database
@@ -19,10 +20,17 @@ database
   
       const uncompressed = inflate.result;
   
-      return createObjectUrl(uncompressed, res.type);
+      return { type: res.type, url: createObjectUrl(uncompressed, res.type) };
     }
   })
-  .then(url => img[0].src = url);
+  .then(media => {
+    console.log(media)
+    if(media.type.indexOf('video') > -1) {
+      video[0].src = media.url
+    } else if(media.type.match(/image/)) {
+      img[0].src = media.url
+    }
+  });
 
 inputFile[0].addEventListener('change', (event) =>
   add(database, event.target.files));
