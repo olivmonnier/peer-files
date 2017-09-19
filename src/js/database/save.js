@@ -1,4 +1,3 @@
-import get from './get';
 import getObjectStore from './getObjectStore';
 
 export default function (db, table, data) {
