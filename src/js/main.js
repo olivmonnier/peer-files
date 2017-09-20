@@ -1,15 +1,16 @@
-import pako from 'pako';
-import { addFiles, getAllFiles, getFile } from './files';
-import { listFiles, showFile, addNewItemFile } from './ui';
+import { listFiles, showFile, newItemFile } from './ui';
+import FileStore from './stores/FileStore';
 
-listFiles();
+const filesStore = new FileStore();
+filesStore.files.then(listFiles)
 
 $(document).on('change', '#inputFile', (event) => 
-  addFiles(event.target.files).then(res => 
-    res.forEach(r => addNewItemFile)));
+  filesStore.addFiles(event.target.files).then(res => res.forEach(newItemFile)));
+
 $(document).on('click', '#listFiles .item', (event) => {
+  let type;
   const $el = $(event.currentTarget);
   const id = $el.data('id');
 
-  getFile(id).then(res => showFile(res.buffer, res.type))
+  filesStore.getFile(id).then(showFile);
 });

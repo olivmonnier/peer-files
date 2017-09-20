@@ -1,5 +1,5 @@
-import { createObjectUrl} from './uint8array-utils';
-import { addFiles, getAllFiles, getFile } from './files';
+import { createObjectUrl} from './utils/uint8array';
+import { uncompress } from './utils/buffer';
 
 const img = $('#img');
 const video = $('#video');
@@ -16,29 +16,27 @@ function newItemFile(file) {
   `)
 }
 
-function addNewItemFile(id) {
-  getFile(id).then(newItemFile);
+function listFiles(files) {
+  files.forEach(newItemFile);
 }
 
-function listFiles() {
-  getAllFiles().then(files => 
-    files.forEach(newItemFile));
-}
+function showFile(file) {
+  const { type, buffer } = file; 
+  const content = uncompress(buffer);
 
-function showFile(data, type) {
   if (type.includes('video')) {
-    createObjectUrl(data).then(url => {
-      $('#preview .image').html(`<video src="${url}" autoplay controls/>`)
+    createObjectUrl(content).then(url => {
+      $('#preview .image').html(`<video src="${ url }" autoplay controls/>`)
     });
   } else if (type.includes('image')) {
-    createObjectUrl(data).then(url => {
-      $('#preview .image').html(`<img src="${url}"/>`);
+    createObjectUrl(content).then(url => {
+      $('#preview .image').html(`<img src="${ url }"/>`);
     });
   }
 }
 
 export {
-  addNewItemFile,
+  newItemFile,
   listFiles,
   showFile
 }
