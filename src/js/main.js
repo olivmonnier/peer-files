@@ -11,7 +11,7 @@ repositoryStore.repositories
   .then(repos => orderBy('name', 'asc')(repos))
   .then(listRepositories)
 
-$(document).on('click', '#newRepository', (event) => {
+$(document).on('click', '#btNewRepository', (event) => {
   $('#newRepositoryModal')
     .modal({
       blurring: true,
@@ -24,7 +24,7 @@ $(document).on('click', '#newRepository', (event) => {
     .modal('show');
 });
 
-$(document).on('change', '#inputFile', (event) => {
+$(document).on('change', '#btInputFile', (event) => {
   const $el = $(event.currentTarget);
   const repositoryId = $el.data('id');
   const repositoryEl = $(`#listFiles .item[data-type="repository"][data-id="${repositoryId}"] .list`);
@@ -60,3 +60,11 @@ $(document).on('click', '#listFiles .item[data-type="repository"]', (event) => {
   fileStore.getFilesInRepository(id)
     .then(files => files.forEach(file => newItemFile(file, $listFiles))); 
 });
+
+$(document).on('click', '#btRemoveFile', (event) => {
+  const $el = $(event.currentTarget);
+  const id = $el.data('id');
+
+  fileStore.removeFile(id)
+    .then(() => $(`#listFiles .item[data-type="file"][data-id="${id}"]`).remove())
+})

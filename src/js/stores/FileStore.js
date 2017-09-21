@@ -1,4 +1,4 @@
-import { open, get, getAll, save } from '../database';
+import { open, get, getAll, save, remove } from '../database';
 import { compress, uncompress } from '../utils/buffer';
 import { readFile } from '../utils/file';
 import Promise from 'bluebird';
@@ -10,26 +10,21 @@ export default class FileStore {
   }
 
   addFile(file, repositoryId) {
-    let newFile;
-    const reader = new FileReader();
+    let newFile, fileSaved;
     const { name, type } = file;
 
     return readFile(file)
       .then(data => {
         const buffer = compress(data);
 
-        newFile = { name, type, buffer, repositoryId };
-
-        return database;         
+        newFile = { name, type, buffer, repositoryId };       
       })
+      .then(() => database)
       .then(db => save(db, 'Resources', newFile))
-      .then(id => {
-        const fileSaved = Object.assign({}, newFile, { id })
-
-        this.files.then(files => files.push(fileSaved));
-
-        return fileSaved;
-      })
+      .then(id => fileSaved = Object.assign({}, newFile, { id }))
+      .then(() => this.files)
+      .then(files => files.push(fileSaved))
+      .then(() => fileSaved);
   }
 
   addFiles(files, repositoryId) {
@@ -59,5 +54,12 @@ export default class FileStore {
 
   loadFiles() {
     return database.then(db => getAll(db, 'Resources'));
+  }
+
+  removeFile(id) {
+    return database
+      .then(db => remove(db, 'Resources', id))
+      .then(() => this.files)
+      .then(files => files = files.filter(file => file.id == id));
   }
 }
