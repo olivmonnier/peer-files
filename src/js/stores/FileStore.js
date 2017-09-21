@@ -1,42 +1,41 @@
 import { open, get, getAll, save } from '../database';
 import { compress, uncompress } from '../utils/buffer';
+import { readFile } from '../utils/file';
+import Promise from 'bluebird';
 
 const database = open('LocalDb');
-
 export default class FileStore {
   constructor() {
     this.files = this.loadFiles();
   }
 
-  addFile(file) {
+  addFile(file, repositoryId) {
+    let newFile;
     const reader = new FileReader();
     const { name, type } = file;
 
-    return new Promise((resolve, reject) => {
-      reader.addEventListener('loadend', () => {
-        const buffer = compress(reader.result);
-        const newFile = { name, type, buffer };
+    return readFile(file)
+      .then(data => {
+        const buffer = compress(data);
 
-        database
-          .then(db => save(db, 'Resources', newFile))
-          .then((id) => {
-            const fileSaved = Object.assign({}, newFile, { id })
+        newFile = { name, type, buffer, repositoryId };
 
-            this.files.then(files => files.push(fileSaved));
+        return database;         
+      })
+      .then(db => save(db, 'Resources', newFile))
+      .then(id => {
+        const fileSaved = Object.assign({}, newFile, { id })
 
-            return fileSaved;
-          })
-          .then(resolve)
-      });
+        this.files.then(files => files.push(fileSaved));
 
-      reader.readAsArrayBuffer(file)
-    })
+        return fileSaved;
+      })
   }
 
-  addFiles(files) {
+  addFiles(files, repositoryId) {
     let fs = Array.isArray(files) ? files : Array.from(files);
 
-    return Promise.all(fs.map(this.addFile.bind(this)));
+    return Promise.all(fs.map(file => this.addFile(file, repositoryId)));
   }
 
   getFile(id) {
@@ -51,6 +50,11 @@ export default class FileStore {
     const file = this.getFile(id);
 
     return file.then(file => uncompress(file.buffer));
+  }
+
+  getFilesInRepository(repositoryId) {
+    return this.files.then(files => 
+      files.filter(file => file.repositoryId == repositoryId));
   }
 
   loadFiles() {
