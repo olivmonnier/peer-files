@@ -1,4 +1,6 @@
-import orderBy  from 'lodash/fp/orderBy';
+import { h } from 'preact/src/h';
+import { render } from 'preact/src/render';
+import ExplorerFiles from './components/ExplorerFiles';
 import { listFiles, showFile, newItemFile } from './ui/file';
 import { listRepositories, newItemRepository, showActionsRepository } from './ui/repository';
 import FileStore from './stores/FileStore';
@@ -7,9 +9,7 @@ import RepositoryStore from './stores/RepositoryStore';
 const repositoryStore = new RepositoryStore();
 const fileStore = new FileStore();
 
-repositoryStore.repositories
-  .then(repos => orderBy('name', 'asc')(repos))
-  .then(listRepositories)
+render(<ExplorerFiles repositories={repositoryStore.repositories} />, document.querySelector('#explorerFiles'))
 
 $(document).on('click', '#btNewRepository', (event) => {
   $('#newRepositoryModal')

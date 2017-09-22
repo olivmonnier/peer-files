@@ -1,0 +1,8 @@
+{
+  "presets": [
+    "preact"
+  ],
+  "plugins": [
+    "external-helpers"
+  ]
+}

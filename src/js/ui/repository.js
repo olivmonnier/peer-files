@@ -1,3 +1,7 @@
+import { h } from 'preact/src/h';
+import { render } from 'preact/src/render';
+import RepositoryActions from '../components/RepositoryActions';
+
 function listRepositories(repositories) {
   repositories.forEach(newItemRepository);
 }
@@ -21,16 +25,7 @@ function renderItemRepository(repository) {
 }
 
 function showActionsRepository(id) {
-  $('#primaryContent').html(`
-    <div class="ui buttons">
-      <label for="btInputFile" class="ui positive button">
-        Add file
-        <input type="file" id="btInputFile" data-id="${ id }" multiple style="display: none"/>
-      </label>
-      <div class="or"></div>
-      <button id="btRemoveRepository" class="ui button">Remove repository</button>
-    </div>
-  `)
+  render(<RepositoryActions id={id} />, document.querySelector('#primaryContent'));
 }
 
 export {
