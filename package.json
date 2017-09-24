@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "move:dir": "copyfiles semantic/dist/**/* dist",
+    "move:dir": "copyfiles semantic/dist/** dist",
     "move:file": "copyfiles -f node_modules/jquery/dist/jquery.min.js dist",
     "move": "npm run move:dir && npm run move:file",
     "scripts": "rollup --config rollup.config.js",

@@ -18,7 +18,7 @@ export default class ExplorerFiles extends Component {
   }
   render() {
     return (
-      <div class="ui list" id="listFiles">
+      <div className="ui list" id="listFiles">
         {this.renderListRepositories()}
       </div>
     )

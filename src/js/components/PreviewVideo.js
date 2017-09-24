@@ -21,15 +21,15 @@ export default class PreviewVideo extends Component {
 
     return (
       <div>
-        <div class="ui secondary menu">
-          <div class="header item">{name}</div>
-          <div class="right menu">
-            <a id="btRemoveFile" data-id={id} class="ui icon item">
-              <i class="trash icon"></i>
+        <div className="ui secondary menu">
+          <div className="header item">{name}</div>
+          <div className="right menu">
+            <a id="btRemoveFile" data-id={id} className="ui icon item">
+              <i className="trash icon"></i>
             </a>
           </div>
         </div>
-        <div class="ui image">
+        <div className="ui image">
           <video src={this.state.url} autoplay controls />
         </div>
       </div>
