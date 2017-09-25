@@ -1,6 +1,6 @@
 import { h } from 'preact/src/h';
 import { render } from 'preact/src/render';
-import ExplorerFiles from './components/ExplorerFiles';
+import MainContainer from './components/MainContainer';
 import { listFiles, showFile, newItemFile } from './ui/file';
 import { listRepositories, newItemRepository, showActionsRepository } from './ui/repository';
 import FileStore from './stores/FileStore';
@@ -9,8 +9,9 @@ import RepositoryStore from './stores/RepositoryStore';
 const repositoryStore = new RepositoryStore();
 const fileStore = new FileStore();
 
-render(<ExplorerFiles repositories={repositoryStore.repositories} />, document.querySelector('#explorerFiles'))
+render(<MainContainer repositories={repositoryStore.repositories} files={fileStore.files} />, document.body)
 
+/*
 $(document).on('click', '#btNewRepository', (event) => {
   $('#newRepositoryModal')
     .modal({
@@ -67,4 +68,4 @@ $(document).on('click', '#btRemoveFile', (event) => {
 
   fileStore.removeFile(id)
     .then(() => $(`#listFiles .item[data-type="file"][data-id="${id}"]`).remove())
-})
+})*/

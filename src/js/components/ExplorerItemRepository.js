@@ -1,5 +1,6 @@
 import { h } from 'preact/src/h';
 import { Component } from 'preact/src/component';
+import ExplorerItemFile from './ExplorerItemFile';
 
 export default class ExplorerItemRepository extends Component {
   constructor(props) {
@@ -27,12 +28,15 @@ export default class ExplorerItemRepository extends Component {
   }
   renderFileList() {
     if (this.state.opened) {
-      return (<strong>Opened</strong>)
+      return this.props.files.map(file => {
+        return <ExplorerItemFile {...file} onShowContent={this.props.onShowContent} />
+      })
     }
   }
   handleToggleClick() {
     this.setState(prevState => ({
       opened: !prevState.opened 
     }));
+    this.props.onShowContent('repository', { id: this.props.id });
   }
 }

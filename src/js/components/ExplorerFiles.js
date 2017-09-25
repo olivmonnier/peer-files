@@ -8,23 +8,33 @@ export default class ExplorerFiles extends Component {
     super(props);
 
     this.state = {
-      repositories: []
+      repositories: [],
+      files: []
     }
   }
   componentDidMount() {
     this.props.repositories
       .then(repos => orderBy('name', 'asc')(repos))
       .then(repositories => this.setState({ repositories }));
+
+    this.props.files
+      .then(files => orderBy('name', 'asc')(files))
+      .then(files => this.setState({ files }));
   }
   render() {
     return (
-      <div className="ui list" id="listFiles">
-        {this.renderListRepositories()}
-      </div>
+      <div class="ui segment" id="explorerFiles">
+        <div className="ui list" id="listFiles">
+          {this.renderListRepositories()}
+        </div>
+      </div>     
     )
   }
   renderListRepositories() {
-    return this.state.repositories.map(repos => 
-      <ExplorerItemRepository {...repos}/>)
+    return this.state.repositories.map(repo => {
+      const files = this.state.files.filter(file => file.repositoryId == repo.id);
+
+      return <ExplorerItemRepository {...repo} files={files} onShowContent={this.props.onShowContent}/>
+    })
   }
 }
