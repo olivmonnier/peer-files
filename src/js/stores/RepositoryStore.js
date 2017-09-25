@@ -2,7 +2,7 @@ import { open, get, getAll, save } from '../database';
 
 const database = open('LocalDb');
 
-export default class RepositoryStore {
+class RepositoryStore {
   constructor() {
     this.repositories = this.loadRepositories();
   }
@@ -27,8 +27,16 @@ export default class RepositoryStore {
         if (repo.length >= 0) return repo[0];
       })
   }
+
+  getRepositories() {
+    return this.repositories;
+  }
   
   loadRepositories() {
     return database.then(db => getAll(db, 'Repositories'))
   }
 }
+
+const repositoryStore = new RepositoryStore();
+
+export default repositoryStore;

@@ -4,7 +4,8 @@ import { readFile } from '../utils/file';
 import Promise from 'bluebird';
 
 const database = open('LocalDb');
-export default class FileStore {
+
+class FileStore {
   constructor() {
     this.files = this.loadFiles();
   }
@@ -41,6 +42,10 @@ export default class FileStore {
     });
   }
 
+  getFiles() {
+    return this.files;
+  }
+
   getFileContent(id) {
     const file = this.getFile(id);
 
@@ -63,3 +68,7 @@ export default class FileStore {
       .then(files => files = files.filter(file => file.id == id));
   }
 }
+
+const fileStore = new FileStore();
+
+export default fileStore;

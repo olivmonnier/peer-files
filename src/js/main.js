@@ -1,17 +1,15 @@
 import { h } from 'preact/src/h';
 import { render } from 'preact/src/render';
 import MainContainer from './components/MainContainer';
-import { listFiles, showFile, newItemFile } from './ui/file';
-import { listRepositories, newItemRepository, showActionsRepository } from './ui/repository';
-import FileStore from './stores/FileStore';
-import RepositoryStore from './stores/RepositoryStore';
+import fileStore from './stores/FileStore';
+import repositoryStore from './stores/RepositoryStore';
 
-const repositoryStore = new RepositoryStore();
-const fileStore = new FileStore();
+const props = { 
+  repositories: repositoryStore.getRepositories(), 
+  files: fileStore.getFiles()
+}
+render(<MainContainer {...props} />, document.body)
 
-render(<MainContainer repositories={repositoryStore.repositories} files={fileStore.files} />, document.body)
-
-/*
 $(document).on('click', '#btNewRepository', (event) => {
   $('#newRepositoryModal')
     .modal({
@@ -19,12 +17,12 @@ $(document).on('click', '#btNewRepository', (event) => {
       onApprove: () => {
         const name = $('input[name="repository-name"]').val();
 
-        repositoryStore.addRepository({ name }).then(newItemRepository);
+        repositoryStore.addRepository({ name });
       }
     })
     .modal('show');
 });
-
+/*
 $(document).on('change', '#btInputFile', (event) => {
   const $el = $(event.currentTarget);
   const repositoryId = $el.data('id');
