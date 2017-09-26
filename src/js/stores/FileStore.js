@@ -33,8 +33,9 @@ export class FileStore extends Reflux.Store {
       .then(() => this.state.files)
       .then(files => {
         let newFiles = files;
-        newFiles.push(fileSaved)
-        return newFiles;
+        
+        newFiles.push(fileSaved);
+        this.setState({ files: newFiles });
       })
       .then(() => fileSaved);
   }
