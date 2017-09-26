@@ -1,14 +1,21 @@
 import Promise from 'bluebird';
-import { observable, action } from 'mobx';
+import Reflux from 'reflux';
 import { open, get, getAll, save, remove } from '../database';
 import { compress, uncompress } from '../utils/buffer';
 import { readFile } from '../utils/file';
 
 const database = open('LocalDb');
 
-export class FileStore {
-  @observable files = [];
-  
+const Actions = Reflux.createActions(['addFile', 'addFiles', 'getFile', 'getFiles', 'getFileContent', 'getFilesInRepository', 'removeFile'])
+
+export class FileStore extends Reflux.Store {
+  constructor() {
+    super();
+    this.state = {
+      files: []
+    }
+    this.listenToMany(Actions);
+  }
   addFile(file, repositoryId) {
     let newFile, fileSaved;
     const { name, type } = file;
@@ -22,8 +29,12 @@ export class FileStore {
       .then(() => database)
       .then(db => save(db, 'Resources', newFile))
       .then(id => fileSaved = Object.assign({}, newFile, { id }))
-      .then(() => this.files)
-      .then(files => files.push(fileSaved))
+      .then(() => this.state.files)
+      .then(files => {
+        let newFiles = files;
+        newFiles.push(fileSaved)
+        return newFiles;
+      })
       .then(() => fileSaved);
   }
 
@@ -34,13 +45,13 @@ export class FileStore {
   }
 
   getFile(id) {
-    const file = this.files.filter(file => file.id == id);
+    const file = this.state.files.filter(file => file.id == id);
 
     if (file.length >= 0) return file[0]
   }
 
   getFiles() {
-    return this.files;
+    return this.state.files;
   }
 
   getFileContent(id) {
@@ -53,9 +64,9 @@ export class FileStore {
     return this.files.filter(file => file.repositoryId == repositoryId);
   }
 
-  @action loadFiles() {
+  loadFiles() {
     return database.then(db => getAll(db, 'Resources'))
-      .then(files => this.files = files);
+      .then(files => this.setState({ files }));
   }
 
   removeFile(id) {

@@ -3,16 +3,11 @@ import { render } from 'react-dom';
 import fileStore from './stores/FileStore';
 import repositoryStore from './stores/RepositoryStore';
 import MainContainer from './components/MainContainer';
-import DevTools from 'mobx-react-devtools';
 
 repositoryStore.loadRepositories();
 fileStore.loadFiles();
 
-render(
-  <div>
-    <MainContainer repositoryStore={repositoryStore} fileStore={fileStore} />
-    <DevTools />
-  </div>, document.querySelector('main'))
+render(<MainContainer />, document.querySelector('main'))
 
 $(document).on('click', '#btNewRepository', (event) => {
   $('#newRepositoryModal')

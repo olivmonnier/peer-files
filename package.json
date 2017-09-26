@@ -30,11 +30,10 @@
     "gulp": "^3.9.1",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
-    "mobx": "^3.3.0",
-    "mobx-react": "^4.3.2",
     "pako": "^1.0.6",
     "react": "^15.6.2",
     "react-dom": "^15.6.2",
+    "reflux": "^6.4.1",
     "semantic-ui": "^2.2.13",
     "webpack": "^3.6.0"
   },

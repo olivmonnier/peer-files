@@ -1,34 +1,41 @@
+import Reflux from 'reflux';
 import { open, get, getAll, save } from '../database';
-import { autorun, observable, action, computed } from 'mobx';
 
 const database = open('LocalDb');
 
-export class RepositoryStore {
-  @observable repositories = [];
+const Actions = Reflux.createActions(['addRepository', 'getRepository', 'loadRepositories'])
 
+export class RepositoryStore extends Reflux.Store {
+  constructor() {
+    super();
+    this.state = {
+      repositories: []
+    }
+    this.listenToMany(Actions);
+  }
   addRepository(repo) {
     return database
       .then(db => save(db, 'Repositories', repo))
       .then(id => {
+        let repositories = this.state.repositories;
         const repoSaved = Object.assign({}, repo, { id });
 
-        this.repositories.push(repoSaved);
+        repositories.push(repoSaved);
+        this.setState({ repositories });
 
         return repoSaved;
       })
   }
 
   getRepository(id) {
-    const repo = this.repositories.filter(repo => repo.id == id);
+    const repo = this.state.repositories.filter(repo => repo.id == id);
 
     if (repo.length >= 0) return repo[0]; 
   }
   
-  @action loadRepositories() {
+  loadRepositories() {
     return database.then(db => getAll(db, 'Repositories'))
-      .then(repos => {
-        this.repositories = repos
-      })
+      .then(repos => this.setState({ repositories: repos }))
   }
 }
 

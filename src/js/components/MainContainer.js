@@ -1,10 +1,11 @@
 import React from 'react';
-import { observer } from "mobx-react";
+import Reflux from 'reflux';
 import ExplorerFiles from './ExplorerFiles';
 import PrimaryContainer from './PrimaryContainer';
+import RepositoryStore from '../stores/RepositoryStore';
+import FileStore from '../stores/FileStore';
 
-@observer 
-export default class MainContainer extends React.Component {
+export default class MainContainer extends Reflux.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -12,15 +13,16 @@ export default class MainContainer extends React.Component {
       data: {}
     }
     this.onShowContent = this.onShowContent.bind(this);
+    this.stores = [RepositoryStore, FileStore] ;
   }
 
   render() {
-    const { repositoryStore, fileStore } = this.props;
+    const { repositories, files } = this.state;
 
     return (
       <div className="ui grid container">
         <div className="six wide column">
-          <ExplorerFiles repositoryStore={repositoryStore} fileStore={fileStore} onShowContent={this.onShowContent}/>
+          <ExplorerFiles repositories={repositories} files={files} onShowContent={this.onShowContent}/>
         </div>
         <div className="ten wide column">
           <PrimaryContainer {...this.state}/>

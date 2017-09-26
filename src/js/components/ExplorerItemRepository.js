@@ -1,8 +1,7 @@
 import React from 'react';
-import { observer } from "mobx-react";
 import ExplorerItemFile from './ExplorerItemFile';
 
-@observer class ExplorerItemRepository extends React.Component {
+export default class ExplorerItemRepository extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,5 +39,3 @@ import ExplorerItemFile from './ExplorerItemFile';
     this.props.onShowContent('repository', { id: this.props.id });
   }
 }
-
-export default ExplorerItemRepository;
