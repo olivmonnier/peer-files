@@ -1,5 +1,6 @@
 import Promise from 'bluebird';
 import Reflux from 'reflux';
+import orderBy from 'lodash/fp/orderBy';
 import { open, get, getAll, save, remove } from '../database';
 import { compress, uncompress } from '../utils/buffer';
 import { readFile } from '../utils/file';
@@ -61,19 +62,23 @@ export class FileStore extends Reflux.Store {
   }
 
   getFilesInRepository(repositoryId) {
-    return this.files.filter(file => file.repositoryId == repositoryId);
+    return this.state.files.filter(file => file.repositoryId == repositoryId);
   }
 
   loadFiles() {
     return database.then(db => getAll(db, 'Resources'))
+      .then(orderBy('name', 'asc'))
       .then(files => this.setState({ files }));
   }
 
   removeFile(id) {
     return database
       .then(db => remove(db, 'Resources', id))
-      .then(() => this.files)
-      .then(files => files = files.filter(file => file.id == id));
+      .then(() => this.state.files)
+      .then(files => {
+        let listFiles = files.filter(file => file.id == id)
+        this.setState({ files: listFiles })
+      });
   }
 }
 

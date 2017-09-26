@@ -1,4 +1,5 @@
 import Reflux from 'reflux';
+import orderBy from 'lodash/fp/orderBy';
 import { open, get, getAll, save } from '../database';
 
 const database = open('LocalDb');
@@ -35,6 +36,7 @@ export class RepositoryStore extends Reflux.Store {
   
   loadRepositories() {
     return database.then(db => getAll(db, 'Repositories'))
+      .then(orderBy('name', 'asc'))
       .then(repos => this.setState({ repositories: repos }))
   }
 }

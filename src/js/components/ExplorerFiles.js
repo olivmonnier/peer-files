@@ -1,5 +1,4 @@
 import React from 'react';
-import orderBy from 'lodash/fp/orderBy';
 import ExplorerItemRepository from './ExplorerItemRepository';
 
 export default class ExplorerFiles extends React.Component {
