@@ -1,11 +1,10 @@
 import { open, get, getAll, save } from '../database';
+import { autorun, observable, action, computed } from 'mobx';
 
 const database = open('LocalDb');
 
-class RepositoryStore {
-  constructor() {
-    this.repositories = this.loadRepositories();
-  }
+export class RepositoryStore {
+  @observable repositories = [];
 
   addRepository(repo) {
     return database
@@ -13,27 +12,23 @@ class RepositoryStore {
       .then(id => {
         const repoSaved = Object.assign({}, repo, { id });
 
-        this.repositories.then(repos => repos.push(repoSaved));
+        this.repositories.push(repoSaved);
 
         return repoSaved;
       })
   }
 
   getRepository(id) {
-    return this.repositories
-      .then(repos => {
-        const repo = repos.filter(repo => repo.id == id);
+    const repo = this.repositories.filter(repo => repo.id == id);
 
-        if (repo.length >= 0) return repo[0];
-      })
-  }
-
-  getRepositories() {
-    return this.repositories;
+    if (repo.length >= 0) return repo[0]; 
   }
   
-  loadRepositories() {
+  @action loadRepositories() {
     return database.then(db => getAll(db, 'Repositories'))
+      .then(repos => {
+        this.repositories = repos
+      })
   }
 }
 

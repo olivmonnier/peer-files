@@ -1,14 +1,18 @@
-import { h } from 'preact/src/h';
-import { render } from 'preact/src/render';
-import MainContainer from './components/MainContainer';
+import React from 'react';
+import { render } from 'react-dom';
 import fileStore from './stores/FileStore';
 import repositoryStore from './stores/RepositoryStore';
+import MainContainer from './components/MainContainer';
+import DevTools from 'mobx-react-devtools';
 
-const props = { 
-  repositories: repositoryStore.getRepositories(), 
-  files: fileStore.getFiles()
-}
-render(<MainContainer {...props} />, document.body)
+repositoryStore.loadRepositories();
+fileStore.loadFiles();
+
+render(
+  <div>
+    <MainContainer repositoryStore={repositoryStore} fileStore={fileStore} />
+    <DevTools />
+  </div>, document.querySelector('main'))
 
 $(document).on('click', '#btNewRepository', (event) => {
   $('#newRepositoryModal')

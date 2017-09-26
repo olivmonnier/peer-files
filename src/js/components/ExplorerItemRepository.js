@@ -1,8 +1,8 @@
-import { h } from 'preact/src/h';
-import { Component } from 'preact/src/component';
+import React from 'react';
+import { observer } from "mobx-react";
 import ExplorerItemFile from './ExplorerItemFile';
 
-export default class ExplorerItemRepository extends Component {
+@observer class ExplorerItemRepository extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -10,12 +10,12 @@ export default class ExplorerItemRepository extends Component {
     }
     this.handleToggleClick = this.handleToggleClick.bind(this);
   }
-  render(props) {
-    const { id, name } = props;
+  render() {
+    const { id, name } = this.props;
     const classNamesIcoFolder = (this.state.opened ? 'open ' : '') + 'folder icon';
 
     return (
-      <a className="item" data-id={id} data-type="repository" onClick={this.handleToggleClick}>
+      <div className="item" data-id={id} data-type="repository" onClick={this.handleToggleClick}>
         <i className={classNamesIcoFolder} ></i>
         <div className="content">
           <div className="header">{name}</div>
@@ -23,13 +23,13 @@ export default class ExplorerItemRepository extends Component {
             {this.renderFileList()}
           </div>
         </div>
-      </a>
+      </div>
     )
   }
   renderFileList() {
     if (this.state.opened) {
       return this.props.files.map(file => {
-        return <ExplorerItemFile {...file} onShowContent={this.props.onShowContent} />
+        return <ExplorerItemFile key={file.id} {...file} onShowContent={this.props.onShowContent} />
       })
     }
   }
@@ -40,3 +40,5 @@ export default class ExplorerItemRepository extends Component {
     this.props.onShowContent('repository', { id: this.props.id });
   }
 }
+
+export default ExplorerItemRepository;

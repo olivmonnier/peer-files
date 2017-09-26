@@ -1,9 +1,10 @@
-import { h } from 'preact/src/h';
-import { Component } from 'preact/src/component';
+import React from 'react';
+import { observer } from "mobx-react";
 import ExplorerFiles from './ExplorerFiles';
 import PrimaryContainer from './PrimaryContainer';
 
-export default class MainContainer extends Component {
+@observer 
+export default class MainContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,13 +14,15 @@ export default class MainContainer extends Component {
     this.onShowContent = this.onShowContent.bind(this);
   }
 
-  render(props) {
+  render() {
+    const { repositoryStore, fileStore } = this.props;
+
     return (
-      <div class="ui grid container">
-        <div class="six wide column">
-          <ExplorerFiles {...props} onShowContent={this.onShowContent}/>
+      <div className="ui grid container">
+        <div className="six wide column">
+          <ExplorerFiles repositoryStore={repositoryStore} fileStore={fileStore} onShowContent={this.onShowContent}/>
         </div>
-        <div class="ten wide column">
+        <div className="ten wide column">
           <PrimaryContainer {...this.state}/>
         </div>
       </div>

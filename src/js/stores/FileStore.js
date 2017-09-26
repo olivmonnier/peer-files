@@ -1,15 +1,14 @@
+import Promise from 'bluebird';
+import { observable, action } from 'mobx';
 import { open, get, getAll, save, remove } from '../database';
 import { compress, uncompress } from '../utils/buffer';
 import { readFile } from '../utils/file';
-import Promise from 'bluebird';
 
 const database = open('LocalDb');
 
-class FileStore {
-  constructor() {
-    this.files = this.loadFiles();
-  }
-
+export class FileStore {
+  @observable files = [];
+  
   addFile(file, repositoryId) {
     let newFile, fileSaved;
     const { name, type } = file;
@@ -35,11 +34,9 @@ class FileStore {
   }
 
   getFile(id) {
-    return this.files.then(files => {
-      const file = files.filter(file => file.id == id);
+    const file = this.files.filter(file => file.id == id);
 
-      if (file.length >= 0) return file[0]
-    });
+    if (file.length >= 0) return file[0]
   }
 
   getFiles() {
@@ -49,16 +46,16 @@ class FileStore {
   getFileContent(id) {
     const file = this.getFile(id);
 
-    return file.then(file => uncompress(file.buffer));
+    return uncompress(file.buffer);
   }
 
   getFilesInRepository(repositoryId) {
-    return this.files.then(files => 
-      files.filter(file => file.repositoryId == repositoryId));
+    return this.files.filter(file => file.repositoryId == repositoryId);
   }
 
-  loadFiles() {
-    return database.then(db => getAll(db, 'Resources'));
+  @action loadFiles() {
+    return database.then(db => getAll(db, 'Resources'))
+      .then(files => this.files = files);
   }
 
   removeFile(id) {

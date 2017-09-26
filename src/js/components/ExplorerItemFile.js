@@ -1,22 +1,21 @@
-import { h } from 'preact/src/h';
-import { Component } from 'preact/src/component';
+import React from 'react';
 
-export default class ExplorerItemFile extends Component {
+export default class ExplorerItemFile extends React.Component {
   constructor(props) {
     super(props);
 
     this.handleClick = this.handleClick.bind(this);
   }
-  render(props) {
-    const { id, name } = props;
+  render() {
+    const { id, name } = this.props;
 
     return (
-      <a className="item" data-id={id} data-type="file" onClick={this.handleClick}>
+      <div className="item" data-id={id} data-type="file" onClick={this.handleClick}>
         <i className="file icon"></i>
         <div className="content">
           <div className="header">{name}</div>
         </div>
-      </a>
+      </div>
     )
   }
 

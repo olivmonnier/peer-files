@@ -1,11 +1,9 @@
-import { h } from 'preact/src/h';
-import { Component } from 'preact/src/component';
+import React from 'react';
 import PreviewImage from './PreviewImage';
 import PreviewVideo from './PreviewVideo';
 import RepositoryActions from './RepositoryActions'
 
-export default class PrimaryContainer extends Component {
-
+export default class PrimaryContainer extends React.Component {
   render() {
     return (
       <div id="primaryContent" className="ui center aligned very padded piled segment">

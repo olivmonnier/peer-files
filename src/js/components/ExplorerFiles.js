@@ -1,29 +1,12 @@
-import { h } from 'preact/src/h';
-import { Component } from 'preact/src/component';
+import React from 'react';
 import orderBy from 'lodash/fp/orderBy';
+import { observer } from "mobx-react";
 import ExplorerItemRepository from './ExplorerItemRepository';
 
-export default class ExplorerFiles extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      repositories: [],
-      files: []
-    }
-  }
-  componentDidMount() {
-    this.props.repositories
-      .then(repos => orderBy('name', 'asc')(repos))
-      .then(repositories => this.setState({ repositories }));
-
-    this.props.files
-      .then(files => orderBy('name', 'asc')(files))
-      .then(files => this.setState({ files }));
-  }
+@observer class ExplorerFiles extends React.Component {
   render() {
     return (
-      <div class="ui segment" id="explorerFiles">
+      <div className="ui segment" id="explorerFiles">
         <div className="ui list" id="listFiles">
           {this.renderListRepositories()}
         </div>
@@ -31,10 +14,12 @@ export default class ExplorerFiles extends Component {
     )
   }
   renderListRepositories() {
-    return this.state.repositories.map(repo => {
-      const files = this.state.files.filter(file => file.repositoryId == repo.id);
+    return this.props.repositoryStore.repositories.map(repo => {
+      const files = this.props.files.filter(file => file.repositoryId == repo.id);
 
-      return <ExplorerItemRepository {...repo} files={files} onShowContent={this.props.onShowContent}/>
+      return <ExplorerItemRepository key={repo.id} {...repo} files={files} onShowContent={this.props.onShowContent}/>
     })
   }
 }
+
+export default ExplorerFiles;

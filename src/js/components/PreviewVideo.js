@@ -1,9 +1,8 @@
-import { h } from 'preact/src/h';
-import { Component } from 'preact/src/component';
+import React from 'react';
 import { createObjectUrl } from '../utils/uint8array';
 import { uncompress } from '../utils/buffer';
 
-export default class PreviewVideo extends Component {
+export default class PreviewVideo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -11,13 +10,13 @@ export default class PreviewVideo extends Component {
     }
   }
   componentDidMount() {
-    const content = uncompress(this.props.buffer);
-
-    createObjectUrl(content)
-      .then(url => this.setState({ url }));
+    this.setUrlStateContent(this.props.buffer)
   }
-  render(props) {
-    const { name, id, url } = props;
+  componentWillReceiveProps(nextProps) {
+    this.setUrlStateContent(nextProps.buffer)
+  }
+  render() {
+    const { name, id, url } = this.props;
 
     return (
       <div>
@@ -34,5 +33,11 @@ export default class PreviewVideo extends Component {
         </div>
       </div>
     )
+  }
+  setUrlStateContent(buffer) {
+    const content = uncompress(buffer);
+
+    createObjectUrl(content)
+      .then(url => this.setState({ url }));
   }
 } 
