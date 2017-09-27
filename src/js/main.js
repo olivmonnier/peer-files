@@ -1,11 +1,11 @@
 import React from 'react';
 import { render } from 'react-dom';
-import fileStore from './stores/FileStore';
+import FileActions from './actions/FileActions';
 import repositoryStore from './stores/RepositoryStore';
 import MainContainer from './components/MainContainer';
 
 repositoryStore.loadRepositories();
-fileStore.loadFiles();
+FileActions.loadFiles();
 
 render(<MainContainer />, document.querySelector('main'))
 

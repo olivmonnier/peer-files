@@ -40,7 +40,7 @@ export default class RepositoryView extends React.Component {
 
     FileActions.addFiles(event.target.files, repositoryId);
 
-    FileActions.addFiles.completed.listen(function() {
+    FileActions.addFiles.success.listen(function() {
       onStateChangeloading(false)
     })
   }
