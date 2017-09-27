@@ -1,10 +1,9 @@
 import Reflux from 'reflux';
 import orderBy from 'lodash/fp/orderBy';
-import { open, get, getAll, save } from '../database';
+import { open, get, getAll, save, remove } from '../database';
+import Actions from '../actions/RepositoryActions';
 
 const database = open('LocalDb');
-
-const Actions = Reflux.createActions(['addRepository', 'getRepository', 'loadRepositories'])
 
 export class RepositoryStore extends Reflux.Store {
   constructor() {
@@ -32,6 +31,15 @@ export class RepositoryStore extends Reflux.Store {
     const repo = this.state.repositories.filter(repo => repo.id == id);
 
     if (repo.length >= 0) return repo[0]; 
+  }
+
+  removeRepository(id) {
+    return database
+      .then(db => remove(db, 'Repositories', id))
+      .then(() => {
+        let listRepos = this.state.repositories.filter(repos => repos.id !== id)
+        this.setState({ repositories: listRepos })
+      })
   }
   
   loadRepositories() {

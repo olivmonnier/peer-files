@@ -1,13 +1,13 @@
-import Promise from 'bluebird';
 import Reflux from 'reflux';
+import Promise from 'bluebird';
 import orderBy from 'lodash/fp/orderBy';
-import { open, get, getAll, save, remove } from '../database';
 import { compress, uncompress } from '../utils/buffer';
 import { readFile } from '../utils/file';
+import Actions from '../actions/FileActions';
+
+import { open, get, getAll, save, remove } from '../database';
 
 const database = open('LocalDb');
-
-const Actions = Reflux.createActions(['addFile', 'addFiles', 'getFile', 'getFiles', 'getFileContent', 'getFilesInRepository', 'removeFile'])
 
 export class FileStore extends Reflux.Store {
   constructor() {
@@ -15,9 +15,16 @@ export class FileStore extends Reflux.Store {
     this.state = {
       files: []
     }
-    this.listenToMany(Actions);
+    this.listenables = Actions;
   }
-  addFile(file, repositoryId) {
+  onAddFiles(files, repositoryId) {
+    let fs = Array.isArray(files) ? files : Array.from(files);
+
+    Promise.all(fs.map(file => Actions.addFile(file, repositoryId)))
+      .then(Actions.addFiles.completed)
+      .catch(Actions.addFiles.failed)
+  }
+  onAddFile(file, repositoryId) {
     let newFile, fileSaved;
     const { name, type } = file;
 
@@ -25,25 +32,38 @@ export class FileStore extends Reflux.Store {
       .then(data => {
         const buffer = compress(data);
 
-        newFile = { name, type, buffer, repositoryId };       
+        newFile = { name, type, buffer, repositoryId };
       })
       .then(() => database)
       .then(db => save(db, 'Resources', newFile))
-      .then(id => fileSaved = Object.assign({}, newFile, { id }))
-      .then(() => this.state.files)
-      .then(files => {
-        let newFiles = files;
-        
-        newFiles.push(fileSaved);
-        this.setState({ files: newFiles });
+      .then(id => {
+        let newList = this.state.files;
+        const fileSaved = Object.assign({}, newFile, { id });
+        newList.push(fileSaved);
+
+        this.setState({ files: newList });
       })
-      .then(() => fileSaved);
+      .then(Actions.addFile.completed)
+      .catch(Actions.addFile.failed)
   }
 
-  addFiles(files, repositoryId) {
-    let fs = Array.isArray(files) ? files : Array.from(files);
+  onRemoveFile(id) {
+    return database
+      .then(db => remove(db, 'Resources', id))
+      .then(() => {
+        let listFiles = this.state.files.filter(file => file.id !== id)
+        this.setState({ files: listFiles })
+      })
+      .then(Actions.removeFile.completed)
+      .catch(Actions.removeFile.failed);
+  }
 
-    return Promise.all(fs.map(file => this.addFile(file, repositoryId)));
+  onRemoveFiles(repositoryId) {
+    const files = this.getFilesInRepository(repositoryId)
+
+    return Promise.all(files.map(file => Actions.removeFile(file.id)))
+      .then(Actions.removeFiles.completed)
+      .catch(Actions.removeFiles.failed);
   }
 
   getFile(id) {
@@ -70,16 +90,6 @@ export class FileStore extends Reflux.Store {
     return database.then(db => getAll(db, 'Resources'))
       .then(orderBy('name', 'asc'))
       .then(files => this.setState({ files }));
-  }
-
-  removeFile(id) {
-    return database
-      .then(db => remove(db, 'Resources', id))
-      .then(() => this.state.files)
-      .then(files => {
-        let listFiles = files.filter(file => file.id == id)
-        this.setState({ files: listFiles })
-      });
   }
 }
 

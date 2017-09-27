@@ -1,6 +1,7 @@
 import React from 'react';
 import { createObjectUrl } from '../utils/uint8array';
 import { uncompress } from '../utils/buffer';
+import FileActions from '../actions/FileActions';
 
 export default class PreviewImage extends React.Component {
   constructor(props) {
@@ -8,6 +9,7 @@ export default class PreviewImage extends React.Component {
     this.state = {
       url: ''
     }
+    this.handleRemove = this.handleRemove.bind(this);
   }
   componentDidMount() {
     this.setUrlStateContent(this.props.buffer)
@@ -21,12 +23,10 @@ export default class PreviewImage extends React.Component {
     return (
       <div>
         <div className="ui secondary menu">
-          <div className="header item">{name}</div>
-          <div className="right menu">
-            <a id="btRemoveFile" data-id={id} className="ui icon item">
-              <i className="trash icon"></i>
-            </a>
-          </div>
+          <div className="header item">{name}: </div>
+          <a id="btRemoveFile" data-id={id} className="item" onClick={this.handleRemove}>
+            Delete file
+          </a>
         </div>
         <div className="ui image">
           <img src={this.state.url} />
@@ -39,5 +39,12 @@ export default class PreviewImage extends React.Component {
 
     createObjectUrl(content)
       .then(url => this.setState({ url }));
+  }
+  handleRemove(event) {
+    const { onShowContent} = this.props;
+    const el = event.currentTarget;
+    const id = parseInt(el.dataset.id, 10);
+
+    FileActions.removeFile(id);
   }
 }

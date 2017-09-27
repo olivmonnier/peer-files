@@ -20,12 +20,12 @@ export default class MainContainer extends Reflux.Component {
     const { repositories, files } = this.state;
 
     return (
-      <div className="ui grid container">
+      <div className="ui grid padded">
         <div className="six wide column">
           <ExplorerFiles repositories={repositories} files={files} onShowContent={this.onShowContent}/>
         </div>
         <div className="ten wide column">
-          <PrimaryContainer {...this.state}/>
+          <PrimaryContainer {...this.state} onShowContent={this.onShowContent}/>
         </div>
       </div>
     )

@@ -33,9 +33,11 @@ export default class ExplorerItemRepository extends React.Component {
     }
   }
   handleToggleClick() {
+    const { id, name } = this.props;
+
     this.setState(prevState => ({
       opened: !prevState.opened 
     }));
-    this.props.onShowContent('repository', { id: this.props.id });
+    this.props.onShowContent('repository', { id, name });
   }
 }
