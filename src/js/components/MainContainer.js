@@ -25,7 +25,7 @@ export default class MainContainer extends Reflux.Component {
           <ExplorerFiles repositories={repositories} files={files} onShowContent={this.onShowContent}/>
         </div>
         <div className="ten wide column">
-          <PrimaryContainer {...this.state} onShowContent={this.onShowContent}/>
+          <PrimaryContainer {...this.state} />
         </div>
       </div>
     )

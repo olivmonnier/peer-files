@@ -21,12 +21,12 @@ export default class PrimaryContainer extends React.Component {
     )
   }
   selectTypeView() {
-    const { type, onShowContent } = this.props;
+    const { type } = this.props;
 
     if(type == 'file') {
       return this.showFile();
     } else if(type == 'repository') {
-      return <RepositoryView {...this.props.data} onStateChangeloading={this.onStateChangeloading} onShowContent={onShowContent} />
+      return <RepositoryView {...this.props.data} onStateChangeloading={this.onStateChangeloading} />
     } else {
       return <div/>;
     }
@@ -35,9 +35,9 @@ export default class PrimaryContainer extends React.Component {
     const { type } = this.props.data;
 
     if (type.includes('video')) {
-      return <PreviewVideo {...this.props.data} onShowContent={this.props.onShowContent}/>
+      return <PreviewVideo {...this.props.data} />
     } else if (type.includes('image')) {
-      return <PreviewImage {...this.props.data} onShowContent={this.props.onShowContent}/>
+      return <PreviewImage {...this.props.data} />
     }
   }
   onStateChangeloading(isLoading) {

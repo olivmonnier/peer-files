@@ -11,9 +11,9 @@ const database = open('LocalDb');
 
 
 const FileActions = Reflux.createActions([
+  { 'loadFiles': { children: ['success', 'failed'] }},
   { 'addFile': { children: ['success', 'failed'] }}, 
   { 'addFiles': { children: ['success', 'failed'] }},
-  { 'loadFiles': { children: ['success', 'failed'] }},
   { 'removeFile': { children: ['success', 'failed'] }}, 
   { 'removeFiles': { children: ['success', 'failed'] }},
   'getFile',

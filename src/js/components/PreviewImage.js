@@ -7,7 +7,8 @@ export default class PreviewImage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      url: ''
+      url: '',
+      removed: false
     }
     this.handleRemove = this.handleRemove.bind(this);
   }
@@ -22,15 +23,23 @@ export default class PreviewImage extends React.Component {
 
     return (
       <div>
-        <div className="ui secondary menu">
-          <div className="header item">{name}: </div>
-          <a id="btRemoveFile" data-id={id} className="item" onClick={this.handleRemove}>
-            Delete file
-          </a>
-        </div>
-        <div className="ui image">
-          <img src={this.state.url} />
-        </div>
+        { this.state.removed ? (
+          <div className="ui positive message">
+            <p>File removed with success</p>
+          </div>
+        ) : (
+          <div>
+            <div className="ui secondary menu">
+              <div className="header item">{name}: </div>
+              <a id="btRemoveFile" data-id={id} className="item" onClick={this.handleRemove}>
+                Delete file
+              </a>
+            </div>
+            <div className="ui image">
+              <img src={this.state.url} />
+            </div>
+          </div>
+        )}
       </div>
     )
   }
@@ -41,10 +50,14 @@ export default class PreviewImage extends React.Component {
       .then(url => this.setState({ url }));
   }
   handleRemove(event) {
-    const { onShowContent} = this.props;
+    const { onShowContent, repositoryId} = this.props;
     const el = event.currentTarget;
     const id = parseInt(el.dataset.id, 10);
+    const self = this;
 
     FileActions.removeFile(id);
+    FileActions.removeFile.success.listen(function() {
+      self.setState({ removed: true });
+    })
   }
 }

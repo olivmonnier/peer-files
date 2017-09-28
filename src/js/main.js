@@ -1,10 +1,10 @@
 import React from 'react';
 import { render } from 'react-dom';
 import FileActions from './actions/FileActions';
-import repositoryStore from './stores/RepositoryStore';
+import RepositoryActions from './actions/RepositoryActions';
 import MainContainer from './components/MainContainer';
 
-repositoryStore.loadRepositories();
+RepositoryActions.loadRepositories();
 FileActions.loadFiles();
 
 render(<MainContainer />, document.querySelector('main'))
@@ -16,7 +16,7 @@ $(document).on('click', '#btNewRepository', (event) => {
       onApprove: () => {
         const name = $('input[name="repository-name"]').val();
 
-        repositoryStore.addRepository({ name });
+        RepositoryActions.addRepository({ name });
       }
     })
     .modal('show');

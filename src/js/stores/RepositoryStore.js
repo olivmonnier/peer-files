@@ -11,41 +11,28 @@ export class RepositoryStore extends Reflux.Store {
     this.state = {
       repositories: []
     }
-    this.listenToMany(Actions);
+    this.listenables = Actions;
   }
-  addRepository(repo) {
-    return database
-      .then(db => save(db, 'Repositories', repo))
-      .then(id => {
-        let repositories = this.state.repositories;
-        const repoSaved = Object.assign({}, repo, { id });
 
-        repositories.push(repoSaved);
-        this.setState({ repositories });
+  onLoadRepositoriesSuccess(repositories) {
+    this.setState({ repositories })
+  }
 
-        return repoSaved;
-      })
+  onAddRepositorySuccess(newRepo) {
+    let newList = this.state.repositories;
+    newList.push(newRepo);
+    this.setState({ repositories: newList });
+  }
+
+  onRemoveRepositorySuccess(id) {
+    let listRepos = this.state.repositories.filter(repos => repos.id !== id)
+    this.setState({ repositories: listRepos })
   }
 
   getRepository(id) {
     const repo = this.state.repositories.filter(repo => repo.id == id);
 
-    if (repo.length >= 0) return repo[0]; 
-  }
-
-  removeRepository(id) {
-    return database
-      .then(db => remove(db, 'Repositories', id))
-      .then(() => {
-        let listRepos = this.state.repositories.filter(repos => repos.id !== id)
-        this.setState({ repositories: listRepos })
-      })
-  }
-  
-  loadRepositories() {
-    return database.then(db => getAll(db, 'Repositories'))
-      .then(orderBy('name', 'asc'))
-      .then(repos => this.setState({ repositories: repos }))
+    if (repo.length >= 0) return repo[0];
   }
 }
 

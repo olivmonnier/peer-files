@@ -17,6 +17,10 @@ export class FileStore extends Reflux.Store {
     this.listenables = Actions;
   }
 
+  onLoadFilesSuccess(files) {
+    this.setState({ files });
+  }
+
   onAddFileSuccess(newFile) {
     let newList = this.state.files;
     newList.push(newFile);
@@ -54,10 +58,6 @@ export class FileStore extends Reflux.Store {
 
   getFilesInRepository(repositoryId) {
     return this.state.files.filter(file => file.repositoryId == repositoryId);
-  }
-
-  onLoadFilesSuccess(files) {
-    this.setState({ files });
   }
 }
 
