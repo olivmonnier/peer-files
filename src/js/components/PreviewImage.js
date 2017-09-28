@@ -50,7 +50,6 @@ export default class PreviewImage extends React.Component {
       .then(url => this.setState({ url }));
   }
   handleRemove(event) {
-    const { onShowContent, repositoryId} = this.props;
     const el = event.currentTarget;
     const id = parseInt(el.dataset.id, 10);
     const self = this;
