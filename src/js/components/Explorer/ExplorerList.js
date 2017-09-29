@@ -1,5 +1,7 @@
 import React from 'react';
 import ExplorerItemRepository from './ExplorerItemRepository';
+import ModalNewRepository from './ModalNewRepository';
+import RepositoryActions from '../../actions/RepositoryActions';
 
 export default class ExplorerList extends React.Component {
   constructor(props) {
@@ -18,7 +20,8 @@ export default class ExplorerList extends React.Component {
           <div className="ui list" id="listFiles">
             {this.renderListRepositories()}
           </div>
-        </div>     
+        </div>  
+        <ModalNewRepository />
       </div>
     )
   }
@@ -37,6 +40,7 @@ export default class ExplorerList extends React.Component {
           const name = $('input[name="repository-name"]').val();
 
           RepositoryActions.addRepository({ name });
+          this.props.onShowContent();
         }
       })
       .modal('show');

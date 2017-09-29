@@ -20,6 +20,7 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "reflux": "^6.4.1",
+    "reflux-promise": "^1.0.4",
     "semantic-ui-css": "^2.2.12"
   },
   "devDependencies": {

@@ -12,6 +12,11 @@ export default class RepositoryView extends React.Component {
     this.handleChangeInputFile = this.handleChangeInputFile.bind(this);
     this.handleRemoveRepository = this.handleRemoveRepository.bind(this);
   }
+  componentWillReceiveProps() {
+    this.setState({
+      removed: false
+    });
+  }
   render() {
     const { id, name } = this.props;
     const inputStyle = {
@@ -30,7 +35,7 @@ export default class RepositoryView extends React.Component {
               <div className="header item">{name}: </div>
               <a className="item" id="btInputFile" onClick={this.handleSelectFiles}>
                 Add files
-                <input type="file" data-id={id} multiple style={inputStyle} onChange={this.handleChangeInputFile} />
+                <input type="file" multiple style={inputStyle} onChange={this.handleChangeInputFile} />
               </a>
               <a id="btRemoveRepository" className="item" onClick={this.handleRemoveRepository}>Remove repository</a>
             </div>
@@ -46,29 +51,33 @@ export default class RepositoryView extends React.Component {
     el.querySelector('input').click();
   }
   handleChangeInputFile(event) {
-    const { onStateChangeloading } = this.props;
+    const { id, onStateChangeloading } = this.props;
     const el = event.currentTarget;
-    const repositoryId = el.dataset.id;
+    const repositoryId = id;
 
     onStateChangeloading(true);
 
     FileActions.addFiles(event.target.files, repositoryId);
 
-    FileActions.addFiles.success.listen(function() {
+    FileActions.addFiles.completed.listen(function() {
       onStateChangeloading(false)
     })
   }
   handleRemoveRepository() {
     const { id, onStateChangeloading } = this.props;
+    const repositoryId = id;
     const self = this;
 
     onStateChangeloading(true);
 
-    FileActions.removeFiles.success.listen(function() {
-      return RepositoryActions.removeRepository(id);
+    FileActions.removeFiles.completed.listenAndPromise(function() {
+      const { id } = self.props;
+
+      RepositoryActions.removeRepository(id)
     })
-    RepositoryActions.removeRepository.success.listen(function() {
+    RepositoryActions.removeRepository.completed.listen(function() {
       onStateChangeloading(false);
+
       self.setState({ removed: true });
     })
     FileActions.removeFiles(id);

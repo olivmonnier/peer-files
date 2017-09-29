@@ -14,17 +14,17 @@ export class RepositoryStore extends Reflux.Store {
     this.listenables = Actions;
   }
 
-  onLoadRepositoriesSuccess(repositories) {
+  onLoadRepositoriesCompleted(repositories) {
     this.setState({ repositories })
   }
 
-  onAddRepositorySuccess(newRepo) {
+  onAddRepositoryCompleted(newRepo) {
     let newList = this.state.repositories;
     newList.push(newRepo);
     this.setState({ repositories: newList });
   }
 
-  onRemoveRepositorySuccess(id) {
+  onRemoveRepositoryCompleted(id) {
     let listRepos = this.state.repositories.filter(repos => repos.id !== id)
     this.setState({ repositories: listRepos })
   }

@@ -17,17 +17,17 @@ export class FileStore extends Reflux.Store {
     this.listenables = Actions;
   }
 
-  onLoadFilesSuccess(files) {
+  onLoadFilesCompleted(files) {
     this.setState({ files });
   }
 
-  onAddFileSuccess(newFile) {
+  onAddFileCompleted(newFile) {
     let newList = this.state.files;
     newList.push(newFile);
     this.setState({ files: newList });
   }
 
-  onRemoveFileSuccess(id) {
+  onRemoveFileCompleted(id) {
     let listFiles = this.state.files.filter(file => file.id !== id)
     this.setState({ files: listFiles })
   }
@@ -36,7 +36,7 @@ export class FileStore extends Reflux.Store {
     const files = this.getFilesInRepository(repositoryId)
 
     return Promise.all(files.map(file => Actions.removeFile(file.id)))
-      .then(Actions.removeFiles.success)
+      .then(Actions.removeFiles.completed)
       .catch(Actions.removeFiles.failed);
   }
 

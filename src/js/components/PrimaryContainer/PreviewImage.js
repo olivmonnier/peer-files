@@ -16,7 +16,10 @@ export default class PreviewImage extends React.Component {
     this.setUrlStateContent(this.props.buffer)
   }
   componentWillReceiveProps(nextProps) {
-    this.setUrlStateContent(nextProps.buffer)
+    this.setState({
+      removed: false
+    });
+    this.setUrlStateContent(nextProps.buffer);
   }
   render() {
     const { id, name } = this.props;
@@ -57,7 +60,7 @@ export default class PreviewImage extends React.Component {
     const self = this;
 
     FileActions.removeFile(id);
-    FileActions.removeFile.success.listen(function() {
+    FileActions.removeFile.completed.listen(function() {
       self.setState({ removed: true });
     })
   }

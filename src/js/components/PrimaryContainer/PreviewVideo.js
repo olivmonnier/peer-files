@@ -16,6 +16,9 @@ export default class PreviewVideo extends React.Component {
     this.setUrlStateContent(this.props.buffer)
   }
   componentWillReceiveProps(nextProps) {
+    this.setState({
+      removed: false
+    });
     this.setUrlStateContent(nextProps.buffer)
   }
   render() {
@@ -57,7 +60,7 @@ export default class PreviewVideo extends React.Component {
     const self = this;
 
     FileActions.removeFile(id);
-    FileActions.removeFile.success.listen(function () {
+    FileActions.removeFile.completed.listen(function () {
       self.setState({ removed: true });
     })
   }

@@ -1,7 +1,7 @@
 import React from 'react';
 import PreviewImage from './PreviewImage';
 import PreviewVideo from './PreviewVideo';
-import RepositoryView from './RepositoryView'
+import RepositoryView from './RepositoryView';
 
 export default class PrimaryContainer extends React.Component {
   constructor(props) {
@@ -32,6 +32,7 @@ export default class PrimaryContainer extends React.Component {
     }
   }
   showFile() {
+    const { onShowContent } = this.props;
     const { type } = this.props.data;
 
     if (type.includes('video')) {

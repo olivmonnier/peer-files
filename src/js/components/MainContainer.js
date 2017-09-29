@@ -14,7 +14,7 @@ export default class MainContainer extends Reflux.Component {
       data: {}
     }
     this.onShowContent = this.onShowContent.bind(this);
-    this.stores = [RepositoryStore, FileStore] ;
+    this.stores = [RepositoryStore, FileStore];
   }
   componentDidMount() {
     $('#menuTabPrimary .item').tab()
