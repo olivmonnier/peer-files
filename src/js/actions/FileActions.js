@@ -32,7 +32,7 @@ FileActions.loadFiles.listen(function() {
 FileActions.addFiles.listen(function (files, repositoryId) {
   let fs = Array.isArray(files) ? files : Array.from(files);
 
-  Promise.all(fs.map(file => FileActions.addFile(file, repositoryId)))
+  return Promise.all(fs.map(file => FileActions.addFile(file, repositoryId)))
     .then(this.success)
     .catch(this.failed)
 })

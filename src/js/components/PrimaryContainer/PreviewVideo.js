@@ -1,6 +1,7 @@
 import React from 'react';
-import { createObjectUrl } from '../utils/uint8array';
-import { uncompress } from '../utils/buffer';
+import { createObjectUrl } from '../../utils/uint8array';
+import { uncompress } from '../../utils/buffer';
+import FileActions from '../../actions/FileActions';
 
 export default class PreviewVideo extends React.Component {
   constructor(props) {
@@ -28,16 +29,16 @@ export default class PreviewVideo extends React.Component {
           </div>
         ) : (
           <div>
-            <div className="ui secondary menu">
+            <div className="ui mini top attached menu">
               <div className="header item">{name}</div>
-              <div className="right menu">
-                <a id="btRemoveFile" data-id={id} className="ui icon item">
-                  <i className="trash icon"></i>
-                </a>
-              </div>
+              <a id="btRemoveFile" data-id={id} className="item">
+                Delete file
+              </a>
             </div>
-            <div className="ui image">
-              <video src={this.state.url} autoplay controls />
+            <div className="ui center aligned attached segment">
+              <div className="ui image">
+                <video src={this.state.url} autoplay controls />
+              </div>
             </div>
           </div>
         )}

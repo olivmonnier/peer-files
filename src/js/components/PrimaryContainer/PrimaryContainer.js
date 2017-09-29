@@ -12,7 +12,7 @@ export default class PrimaryContainer extends React.Component {
     this.onStateChangeloading = this.onStateChangeloading.bind(this);
   }
   render() {
-    const classNameContainer = (this.state.loading ? 'loading ' : '') + 'ui center aligned segment';
+    const classNameContainer = (this.state.loading ? 'loading ' : '');
 
     return (
       <div id="primaryContent" className={classNameContainer}>

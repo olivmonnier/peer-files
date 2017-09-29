@@ -1,6 +1,6 @@
 import React from 'react';
-import RepositoryActions from '../actions/RepositoryActions';
-import FileActions from '../actions/FileActions';
+import RepositoryActions from '../../actions/RepositoryActions';
+import FileActions from '../../actions/FileActions';
 
 export default class RepositoryView extends React.Component {
   constructor(props) {
@@ -25,13 +25,16 @@ export default class RepositoryView extends React.Component {
             <p>Repository removed with success</p>
           </div>
         ) : (
-          <div className="ui secondary menu">
-            <div className="header item">{name}: </div>
-            <a className="item" id="btInputFile" onClick={this.handleSelectFiles}>
-              Add files
-              <input type="file" data-id={id} multiple style={inputStyle} onChange={this.handleChangeInputFile} />
-            </a>
-            <a id="btRemoveRepository" className="item" onClick={this.handleRemoveRepository}>Remove repository</a>
+          <div>
+            <div className="ui mini top attached menu">
+              <div className="header item">{name}: </div>
+              <a className="item" id="btInputFile" onClick={this.handleSelectFiles}>
+                Add files
+                <input type="file" data-id={id} multiple style={inputStyle} onChange={this.handleChangeInputFile} />
+              </a>
+              <a id="btRemoveRepository" className="item" onClick={this.handleRemoveRepository}>Remove repository</a>
+            </div>
+            <div className="ui attached segment"></div>
           </div>
         )}
       </div>     
@@ -62,7 +65,7 @@ export default class RepositoryView extends React.Component {
     onStateChangeloading(true);
 
     FileActions.removeFiles.success.listen(function() {
-      RepositoryActions.removeRepository(id);
+      return RepositoryActions.removeRepository(id);
     })
     RepositoryActions.removeRepository.success.listen(function() {
       onStateChangeloading(false);

@@ -1,7 +1,7 @@
 import React from 'react';
-import { createObjectUrl } from '../utils/uint8array';
-import { uncompress } from '../utils/buffer';
-import FileActions from '../actions/FileActions';
+import { createObjectUrl } from '../../utils/uint8array';
+import { uncompress } from '../../utils/buffer';
+import FileActions from '../../actions/FileActions';
 
 export default class PreviewImage extends React.Component {
   constructor(props) {
@@ -29,14 +29,16 @@ export default class PreviewImage extends React.Component {
           </div>
         ) : (
           <div>
-            <div className="ui secondary menu">
+            <div className="ui mini top attached menu">
               <div className="header item">{name}: </div>
               <a id="btRemoveFile" data-id={id} className="item" onClick={this.handleRemove}>
                 Delete file
               </a>
             </div>
-            <div className="ui image">
-              <img src={this.state.url} />
+            <div className="ui center aligned attached segment">
+              <div className="ui image">
+                <img src={this.state.url} />
+              </div>
             </div>
           </div>
         )}
