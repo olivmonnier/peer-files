@@ -1,12 +1,10 @@
 import React from 'react';
 import { render } from 'react-dom';
 import $ from 'jquery';
-import FileActions from './actions/FileActions';
-import RepositoryActions from './actions/RepositoryActions';
-import MainContainer from './components/MainContainer';
+import configureStore from './store/configureStore';
+import Root from './components/Root';
 import 'semantic-ui-css/semantic.css';
 
-RepositoryActions.loadRepositories();
-FileActions.loadFiles();
+const store = configureStore();
 
-render(<MainContainer />, document.querySelector('main'))
+render(<Root store={store}/>, document.querySelector('main'))

@@ -22,6 +22,6 @@ export default class ExplorerItemFile extends React.Component {
   handleClick(event) {
     event.stopPropagation();
 
-    this.props.onShowContent('file', this.props)
+    this.props.onSelectFile(this.props)
   }
 }

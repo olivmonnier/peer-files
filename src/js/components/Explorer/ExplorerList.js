@@ -1,7 +1,6 @@
 import React from 'react';
 import ExplorerItemRepository from './ExplorerItemRepository';
 import ModalNewRepository from './ModalNewRepository';
-import RepositoryActions from '../../actions/RepositoryActions';
 
 export default class ExplorerList extends React.Component {
   constructor(props) {
@@ -26,10 +25,18 @@ export default class ExplorerList extends React.Component {
     )
   }
   renderListRepositories() {
-    return this.props.repositories.map(repo => {
-      const files = this.props.files.filter(file => file.repositoryId == repo.id);
+    const { repositories, files, onSelectRepository, onSelectFile } = this.props;
 
-      return <ExplorerItemRepository key={repo.id} {...repo} files={files} onShowContent={this.props.onShowContent}/>
+    return this.props.repositories.map(repo => {
+      const filesInRepository = files[repo.id];
+      return (
+        <ExplorerItemRepository 
+          key={repo.id} 
+          {...repo} 
+          files={filesInRepository} 
+          onSelectRepository={onSelectRepository}
+          onSelectFile={onSelectFile} />
+      )
     })
   }
   handleClickNewRepository() {
@@ -38,9 +45,7 @@ export default class ExplorerList extends React.Component {
         blurring: true,
         onApprove: () => {
           const name = $('input[name="repository-name"]').val();
-
-          RepositoryActions.addRepository({ name });
-          this.props.onShowContent();
+          this.props.onAddRepository({ name })
         }
       })
       .modal('show');

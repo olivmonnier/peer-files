@@ -1,5 +1,8 @@
 import React from 'react';
 import ExplorerItemFile from './ExplorerItemFile';
+import {
+  selectRepository
+} from '../../actions/RepositoryActions.js'
 
 export default class ExplorerItemRepository extends React.Component {
   constructor(props) {
@@ -26,18 +29,18 @@ export default class ExplorerItemRepository extends React.Component {
     )
   }
   renderFileList() {
-    if (this.state.opened) {
+    if (this.state.opened && this.props.files) {
       return this.props.files.map(file => {
-        return <ExplorerItemFile key={file.id} {...file} onShowContent={this.props.onShowContent} />
+        return <ExplorerItemFile key={file.id} {...file} onSelectFile={this.props.onSelectFile}/>
       })
     }
   }
   handleToggleClick() {
-    const { id, name } = this.props;
+    const { id, name, onSelectRepository } = this.props;
 
     this.setState(prevState => ({
       opened: !prevState.opened 
     }));
-    this.props.onShowContent('repository', { id, name });
+    onSelectRepository({ id, name });
   }
 }

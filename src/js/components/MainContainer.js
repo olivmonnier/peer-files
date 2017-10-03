@@ -1,26 +1,38 @@
 import React from 'react';
-import Reflux from 'reflux';
+import { connect } from 'react-redux';
 import $ from 'jquery';
 import ExplorerList from './Explorer/ExplorerList';
 import PrimaryContainer from './PrimaryContainer/PrimaryContainer';
-import RepositoryStore from '../stores/RepositoryStore';
-import FileStore from '../stores/FileStore';
+import {
+  addRepository,
+  fetchRepositories,
+  selectRepository
+} from '../actions/RepositoryActions';
+import {
+  fetchFiles
+} from '../actions/FileActions';
 
-export default class MainContainer extends Reflux.Component {
+class MainContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      type: '',
-      data: {}
-    }
-    this.onShowContent = this.onShowContent.bind(this);
-    this.stores = [RepositoryStore, FileStore];
+    this.onAddRepository = this.onAddRepository.bind(this);
+    this.onSelectRepository = this.onSelectRepository.bind(this);
+    this.onSelectFile = this.onSelectFile.bind(this);
   }
   componentDidMount() {
+    const { dispatch, selectedRepository } = this.props;
+    dispatch(fetchRepositories());
+
     $('#menuTabPrimary .item').tab()
   }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selectedRepository !== this.props.selectedRepository) {
+      const { dispatch, selectedRepository } = nextProps; 
+      dispatch(fetchFiles(selectedRepository));
+    }
+  }
   render() {
-    const { repositories, files } = this.state;
+    const { repositories, filesByRepository, selectedRepository } = this.props;
 
     return (
       <div>
@@ -29,20 +41,46 @@ export default class MainContainer extends Reflux.Component {
         </div>
         <div className="ui grid padded active tab" data-tab="explorer">
           <div className="six wide column">
-            <ExplorerList repositories={repositories} files={files} onShowContent={this.onShowContent} />
+            <ExplorerList 
+              repositories={repositories} 
+              files={filesByRepository} 
+              onAddRepository={this.onAddRepository}
+              onSelectRepository={this.onSelectRepository}
+              onSelectFile={this.onSelectFile} />
           </div>
           <div className="ten wide column">
             <PrimaryContainer {...this.state} />
           </div>
         </div>
-      </div>
-      
+      </div>    
     )
   }
-
-  onShowContent(type, data) {
+  onAddRepository(newRepository) {
+    this.props.dispatch(addRepository(newRepository));
+  }
+  onSelectRepository(nextRepository) {
+    this.props.dispatch(selectRepository(nextRepository));
     this.setState({
-      type, data
+      type: 'repository',
+      data: nextRepository
+    })
+  }
+  onSelectFile(nextFile) {
+    this.setState({
+      type: 'file',
+      data: nextFile
     })
   }
 }
+
+function mapState(state) {
+  const { repositories, filesByRepository, selectedRepository } = state;
+
+  return {
+    repositories,
+    selectedRepository,
+    filesByRepository
+  }
+}
+
+export default connect(mapState)(MainContainer);

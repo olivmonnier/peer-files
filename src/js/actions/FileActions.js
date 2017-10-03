@@ -1,4 +1,4 @@
-import Reflux from 'reflux';
+/*import Reflux from 'reflux';
 import RefluxPromise from 'reflux-promise';
 import Promise from 'bluebird';
 import orderBy from 'lodash/fp/orderBy';
@@ -62,4 +62,37 @@ FileActions.removeFile.listen(function (id) {
     .catch(this.failed);
 });
 
-export default FileActions;
+export default FileActions;*/
+
+import {
+  RECEIVE_FILES,
+  SELECT_FILE
+} from '../constants/ActionTypes';
+import orderBy from 'lodash/fp/orderBy';
+import { open, get, getAll, save, remove } from '../database';
+
+const database = open('LocalDb');
+
+export function fetchFiles(repository) {
+  return dispatch => {
+    return database.then(db => getAll(db, 'Resources'))
+      .then(orderBy('name', 'asc'))
+      .then(files => files.filter(file => file.repositoryId == repository.id))
+      .then(files => dispatch(receiveFiles(files, repository)))
+  }
+}
+
+function receiveFiles(files, repository) {
+  return {
+    type: RECEIVE_FILES,
+    repository,
+    files
+  }
+}
+
+export function selectFile(file) {
+  return {
+    type: SELECT_FILE,
+    file
+  }
+}
