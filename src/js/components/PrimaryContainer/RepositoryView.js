@@ -70,16 +70,17 @@ export default class RepositoryView extends React.Component {
 
     onStateChangeloading(true);
 
-    FileActions.removeFiles.completed.listenAndPromise(function() {
+    /*FileActions.removeFiles.completed.listenAndPromise(function() {
       const { id } = self.props;
 
       RepositoryActions.removeRepository(id)
-    })
-    RepositoryActions.removeRepository.completed.listen(function() {
+    })*/
+    /*RepositoryActions.removeRepository.completed.listen(function() {
       onStateChangeloading(false);
 
       self.setState({ removed: true });
     })
-    FileActions.removeFiles(id);
+    FileActions.removeFiles(id);*/
+    RepositoryActions.removeRepository(id)
   }
 }
