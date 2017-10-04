@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import ExplorerItemFile from './ExplorerItemFile';
-import {
-  selectRepository
-} from '../../actions/RepositoryActions.js'
+import { selectRepository } from '../../actions/repositoryActions';
+import { selectFile } from '../../actions/fileActions';
 
-export default class ExplorerItemRepository extends React.Component {
+class ExplorerItemRepository extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,7 +18,7 @@ export default class ExplorerItemRepository extends React.Component {
     const classNamesIcoFolder = (this.state.opened ? 'open ' : '') + 'folder icon';
 
     return (
-      <div className="item" data-id={id} data-type="repository" onClick={this.handleToggleClick}>
+      <div className="item" onClick={this.handleToggleClick}>
         <i className={classNamesIcoFolder} ></i>
         <div className="content">
           <div className="header">{name}</div>
@@ -31,16 +32,22 @@ export default class ExplorerItemRepository extends React.Component {
   renderFileList() {
     if (this.state.opened && this.props.files) {
       return this.props.files.map(file => {
-        return <ExplorerItemFile key={file.id} {...file} onSelectFile={this.props.onSelectFile}/>
+        return <ExplorerItemFile key={file.id} file={file}/>
       })
     }
   }
   handleToggleClick() {
-    const { id, name, onSelectRepository } = this.props;
+    const { id, name } = this.props;
 
     this.setState(prevState => ({
       opened: !prevState.opened 
     }));
-    onSelectRepository({ id, name });
+    this.props.selectRepository({ id, name })
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ selectRepository }, dispatch);
+}
+
+export default connect(null, mapDispatchToProps)(ExplorerItemRepository);

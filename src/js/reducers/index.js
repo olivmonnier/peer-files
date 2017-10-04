@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
 import repositories from './repositories';
 import filesByRepository from './files';
-import selectedRepository from './selectedRepository';
+import selectedInExplorer from './selectedInExplorer';
 
 const rootReducer = combineReducers({
+  filesByRepository,
   repositories,
-  selectedRepository,
-  filesByRepository
+  selectedInExplorer
 })
 
 export default rootReducer;

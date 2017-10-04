@@ -1,8 +1,9 @@
-import React from 'react';
-import RepositoryActions from '../../actions/RepositoryActions';
-import FileActions from '../../actions/FileActions';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { addFiles } from '../../actions/fileActions';
 
-export default class RepositoryView extends React.Component {
+class RepositoryView extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -51,36 +52,17 @@ export default class RepositoryView extends React.Component {
     el.querySelector('input').click();
   }
   handleChangeInputFile(event) {
-    const { id, onStateChangeloading } = this.props;
-    const el = event.currentTarget;
-    const repositoryId = id;
+    const { id } = this.props;
 
-    onStateChangeloading(true);
-
-    FileActions.addFiles(event.target.files, repositoryId);
-
-    FileActions.addFiles.completed.listen(function() {
-      onStateChangeloading(false)
-    })
+    this.props.addFiles(event.target.files, id)
   }
   handleRemoveRepository() {
-    const { id, onStateChangeloading } = this.props;
-    const repositoryId = id;
-    const self = this;
 
-    onStateChangeloading(true);
-
-    /*FileActions.removeFiles.completed.listenAndPromise(function() {
-      const { id } = self.props;
-
-      RepositoryActions.removeRepository(id)
-    })*/
-    /*RepositoryActions.removeRepository.completed.listen(function() {
-      onStateChangeloading(false);
-
-      self.setState({ removed: true });
-    })
-    FileActions.removeFiles(id);*/
-    RepositoryActions.removeRepository(id)
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ addFiles }, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(RepositoryView)

@@ -1,16 +1,17 @@
-import React from 'react';
-
-export default class ExplorerItemFile extends React.Component {
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { selectFile } from '../../actions/fileActions';
+class ExplorerItemFile extends Component {
   constructor(props) {
     super(props);
-
     this.handleClick = this.handleClick.bind(this);
   }
   render() {
-    const { id, name } = this.props;
+    const { name } = this.props.file;
 
     return (
-      <div className="item" data-id={id} data-type="file" onClick={this.handleClick}>
+      <div className="item" onClick={this.handleClick}>
         <i className="file icon"></i>
         <div className="content">
           <div className="header">{name}</div>
@@ -18,10 +19,17 @@ export default class ExplorerItemFile extends React.Component {
       </div>
     )
   }
-
   handleClick(event) {
     event.stopPropagation();
 
-    this.props.onSelectFile(this.props)
+    const { file } = this.props;
+
+    this.props.selectFile(file);
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ selectFile }, dispatch);
+}
+
+export default connect(null, mapDispatchToProps)(ExplorerItemFile);

@@ -1,7 +1,7 @@
 import {
   ADD_REPOSITORY,
   RECEIVE_REPOSITORIES
-} from '../constants/ActionTypes';
+} from '../constants/actionTypes';
 
 export default function repositories(state = [], action) {
   switch(action.type) {

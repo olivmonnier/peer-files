@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import {
+  FILE,
+  REPOSITORY
+} from '../../constants/contentTypes.js';
 import PreviewImage from './PreviewImage';
 import PreviewVideo from './PreviewVideo';
 import RepositoryView from './RepositoryView';
 
-export default class PrimaryContainer extends React.Component {
+class PrimaryContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,24 +27,25 @@ export default class PrimaryContainer extends React.Component {
     )
   }
   selectTypeView() {
-    const { type } = this.props;
+    const { typeContent } = this.props.selectedInExplorer;
 
-    if(type == 'file') {
+    if (typeContent == FILE) {
       return this.showFile();
-    } else if(type == 'repository') {
-      return <RepositoryView {...this.props.data} onStateChangeloading={this.onStateChangeloading} />
+    } else if (typeContent == REPOSITORY) {
+      const { repository } = this.props.selectedInExplorer;
+      return <RepositoryView {...repository} onStateChangeloading={this.onStateChangeloading} />
     } else {
       return <div/>;
     }
   }
   showFile() {
-    const { onShowContent } = this.props;
-    const { type } = this.props.data;
+    const { file } = this.props.selectedInExplorer;
+    const { type } = file;
 
     if (type.includes('video')) {
-      return <PreviewVideo {...this.props.data} />
+      return <PreviewVideo {...file} />
     } else if (type.includes('image')) {
-      return <PreviewImage {...this.props.data} />
+      return <PreviewImage {...file} />
     }
   }
   onStateChangeloading(isLoading) {
@@ -47,3 +54,13 @@ export default class PrimaryContainer extends React.Component {
     })
   }
 }
+
+function mapStateToProps(state) {
+  const { selectedInExplorer } = state;
+
+  return {
+    selectedInExplorer
+  }
+}
+
+export default connect(mapStateToProps)(PrimaryContainer);

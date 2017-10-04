@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { createObjectUrl } from '../../utils/uint8array';
 import { uncompress } from '../../utils/buffer';
-import FileActions from '../../actions/FileActions';
+import { removeFile } from '../../actions/fileActions';
 
-export default class PreviewImage extends React.Component {
+class PreviewImage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,7 +24,7 @@ export default class PreviewImage extends React.Component {
     this.setUrlStateContent(nextProps.buffer);
   }
   render() {
-    const { id, name } = this.props;
+    const { name } = this.props;
 
     return (
       <div>
@@ -34,7 +36,7 @@ export default class PreviewImage extends React.Component {
           <div>
             <div className="ui mini top attached menu">
               <div className="header item">{name}: </div>
-              <a id="btRemoveFile" data-id={id} className="item" onClick={this.handleRemove}>
+              <a id="btRemoveFile" className="item" onClick={this.handleRemove}>
                 Delete file
               </a>
             </div>
@@ -55,13 +57,14 @@ export default class PreviewImage extends React.Component {
       .then(url => this.setState({ url }));
   }
   handleRemove(event) {
-    const el = event.currentTarget;
-    const id = parseInt(el.dataset.id, 10);
-    const self = this;
+    const { id, repositoryId } = this.props;
 
-    FileActions.removeFile(id);
-    FileActions.removeFile.completed.listen(function() {
-      self.setState({ removed: true });
-    })
+    this.props.removeFile(id, repositoryId);
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ removeFile }, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(PreviewImage);

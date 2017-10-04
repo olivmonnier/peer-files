@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { createObjectUrl } from '../../utils/uint8array';
 import { uncompress } from '../../utils/buffer';
-import FileActions from '../../actions/FileActions';
 
-export default class PreviewVideo extends React.Component {
+export default class PreviewVideo extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -59,9 +58,9 @@ export default class PreviewVideo extends React.Component {
     const id = parseInt(el.dataset.id, 10);
     const self = this;
 
-    FileActions.removeFile(id);
+    /*FileActions.removeFile(id);
     FileActions.removeFile.completed.listen(function () {
       self.setState({ removed: true });
-    })
+    })*/
   }
 } 
