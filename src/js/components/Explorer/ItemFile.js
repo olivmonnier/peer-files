@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { selectFile } from '../../actions/fileActions';
-class ExplorerItemFile extends Component {
+
+class ItemFile extends Component {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
@@ -32,4 +33,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ selectFile }, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(ExplorerItemFile);
+export default connect(null, mapDispatchToProps)(ItemFile);

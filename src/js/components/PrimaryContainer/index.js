@@ -3,25 +3,20 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
   FILE,
-  REPOSITORY
+  REPOSITORY,
+  IMAGE,
+  VIDEO
 } from '../../constants/contentTypes.js';
-import PreviewImage from './PreviewImage';
-import PreviewVideo from './PreviewVideo';
+import MediaView from './MediaView';
 import RepositoryView from './RepositoryView';
 
 class PrimaryContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      loading: false
-    }
-    this.onStateChangeloading = this.onStateChangeloading.bind(this);
   }
   render() {
-    const classNameContainer = (this.state.loading ? 'loading ' : '');
-
     return (
-      <div id="primaryContent" className={classNameContainer}>
+      <div>
         {this.selectTypeView()}
       </div>
     )
@@ -33,25 +28,17 @@ class PrimaryContainer extends Component {
       return this.showFile();
     } else if (typeContent == REPOSITORY) {
       const { repository } = this.props.selectedInExplorer;
-      return <RepositoryView {...repository} onStateChangeloading={this.onStateChangeloading} />
-    } else {
-      return <div/>;
+      return <RepositoryView {...repository} />
     }
   }
   showFile() {
     const { file } = this.props.selectedInExplorer;
     const { type } = file;
+    const typeUpper = type.toUpperCase();
 
-    if (type.includes('video')) {
-      return <PreviewVideo {...file} />
-    } else if (type.includes('image')) {
-      return <PreviewImage {...file} />
+    if (typeUpper.includes(IMAGE) || typeUpper.includes(VIDEO)) {
+      return <MediaView {...file} />
     }
-  }
-  onStateChangeloading(isLoading) {
-    this.setState({
-      loading: isLoading
-    })
   }
 }
 

@@ -4,8 +4,8 @@ const htmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const port = process.envPORT || 3000;
 
-const APP_DIR = path.resolve(__dirname, 'src/js');
-const BUILD_DIR = path.resolve(__dirname, 'dist');
+const APP_DIR = path.resolve(__dirname, '../src/js');
+const BUILD_DIR = path.resolve(__dirname, '../dist');
 const VENDOR_LIBS = [
   'react', 'react-dom', 'blob-util', 'bluebird', 'lodash', 'pako', 'reflux', 'jquery', 'semantic-ui-css'
 ]

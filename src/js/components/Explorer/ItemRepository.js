@@ -1,27 +1,28 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import ExplorerItemFile from './ExplorerItemFile';
+import ItemFile from './ItemFile';
 import { selectRepository } from '../../actions/repositoryActions';
 import { selectFile } from '../../actions/fileActions';
 
-class ExplorerItemRepository extends Component {
+class ItemRepository extends Component {
   constructor(props) {
     super(props);
     this.state = {
       opened: false
     }
-    this.handleToggleClick = this.handleToggleClick.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
+    this.handleToggleOpen = this.handleToggleOpen.bind(this);
   }
   render() {
     const { id, name } = this.props;
     const classNamesIcoFolder = (this.state.opened ? 'open ' : '') + 'folder icon';
 
     return (
-      <div className="item" onClick={this.handleToggleClick}>
-        <i className={classNamesIcoFolder} ></i>
+      <div className="item">
+        <i className={classNamesIcoFolder} onClick={this.handleToggleOpen}></i>
         <div className="content">
-          <div className="header">{name}</div>
+          <div className="header" onClick={this.handleSelect}>{name}</div>
           <div className="list">
             {this.renderFileList()}
           </div>
@@ -32,17 +33,29 @@ class ExplorerItemRepository extends Component {
   renderFileList() {
     if (this.state.opened && this.props.files) {
       return this.props.files.map(file => {
-        return <ExplorerItemFile key={file.id} file={file}/>
+        return <ItemFile key={file.id} file={file}/>
       })
     }
   }
-  handleToggleClick() {
-    const { id, name } = this.props;
+  handleSelect() {
+    const { id, name, selectRepository } = this.props;
 
-    this.setState(prevState => ({
-      opened: !prevState.opened 
-    }));
-    this.props.selectRepository({ id, name })
+    selectRepository({ id, name });
+
+    this.setState({
+      opened: true
+    })
+  }
+  handleToggleOpen() {
+    const { files } = this.props;
+
+    if(!this.state.opened && !files) {
+      this.handleSelect()
+    } else {
+      this.setState(prevState => ({
+        opened: !prevState.opened
+      }));
+    }
   }
 }
 
@@ -50,4 +63,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ selectRepository }, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(ExplorerItemRepository);
+export default connect(null, mapDispatchToProps)(ItemRepository);

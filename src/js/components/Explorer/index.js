@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import ExplorerItemRepository from './ExplorerItemRepository';
+import ItemRepository from './ItemRepository';
 import ModalNewRepository from './ModalNewRepository';
 import { addRepository, fetchRepositories } from '../../actions/repositoryActions';
 import { fetchFiles } from '../../actions/fileActions';
 import { REPOSITORY } from '../../constants/contentTypes.js';
 
-class ExplorerList extends Component {
+class Explorer extends Component {
   constructor(props) {
     super(props);
     this.handleClickNewRepository = this.handleClickNewRepository.bind(this);
@@ -26,7 +26,7 @@ class ExplorerList extends Component {
   render() {
     return (
       <div>
-        <div className="ui mini top attached menu">
+        <div className="ui top attached menu">
           <a className="item" id="btNewRepository" onClick={this.handleClickNewRepository}>
             New Repository
           </a>
@@ -45,7 +45,7 @@ class ExplorerList extends Component {
 
     return this.props.repositories.map(repo => {
       return (
-        <ExplorerItemRepository 
+        <ItemRepository 
           key={repo.id} 
           {...repo} 
           files={files[repo.id]} />
@@ -78,4 +78,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ addRepository, fetchFiles, fetchRepositories }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ExplorerList)
+export default connect(mapStateToProps, mapDispatchToProps)(Explorer)

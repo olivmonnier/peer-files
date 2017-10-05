@@ -7,4 +7,4 @@ import 'semantic-ui-css/semantic.css';
 
 const store = configureStore();
 
-render(<Root store={store}/>, document.querySelector('main'))
+render(<Root store={store}/>, document.querySelector('#root'))

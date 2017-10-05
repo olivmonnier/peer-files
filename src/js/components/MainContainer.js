@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import $ from 'jquery';
-import ExplorerList from './Explorer/ExplorerList';
-import PrimaryContainer from './PrimaryContainer/PrimaryContainer';
+import Explorer from './Explorer';
+import PrimaryContainer from './PrimaryContainer';
 
-class MainContainer extends React.Component {
+class MainContainer extends Component {
   componentDidMount() {
     $('#menuTabPrimary .item').tab()
   }
@@ -15,7 +15,7 @@ class MainContainer extends React.Component {
         </div>
         <div className="ui grid padded active tab" data-tab="explorer">
           <div className="six wide column">
-            <ExplorerList />
+            <Explorer />
           </div>
           <div className="ten wide column">
             <PrimaryContainer />
