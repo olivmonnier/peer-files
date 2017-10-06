@@ -8,7 +8,7 @@ import {
   VIDEO
 } from '../../constants/contentTypes.js';
 import MediaView from './MediaView';
-import RepositoryView from './RepositoryView';
+import RepositoryView from '../RepositoryView';
 
 class PrimaryContainer extends Component {
   constructor(props) {

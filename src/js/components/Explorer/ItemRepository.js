@@ -16,12 +16,12 @@ class ItemRepository extends Component {
   }
   render() {
     const { id, name } = this.props;
-    const classNamesIcoFolder = (this.state.opened ? 'open ' : '') + 'folder icon';
+    const classNamesIcoFolder = (this.state.opened ? 'open ' : '') + 'folder icon outline';
 
     return (
       <div className="item">
         <i className={classNamesIcoFolder} onClick={this.handleToggleOpen}></i>
-        <div className="content">
+        <div className="middle aligned content">
           <div className="header" onClick={this.handleSelect}>{name}</div>
           <div className="list">
             {this.renderFileList()}

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ManageFiles from './ManageFiles';
-import { addFiles, removeFiles } from '../../../actions/fileActions';
-import { removeRepository } from '../../../actions/repositoryActions';
+import { removeFiles } from '../../actions/fileActions';
+import { removeRepository } from '../../actions/repositoryActions';
 
 class RepositoryView extends Component {
   constructor(props) {
@@ -13,10 +13,9 @@ class RepositoryView extends Component {
       loading: false,
       edit: false
     }
-    this.handleSelectFiles = this.handleSelectFiles.bind(this);
-    this.handleChangeInputFile = this.handleChangeInputFile.bind(this);
     this.handleRemoveRepository = this.handleRemoveRepository.bind(this);
     this.handleToggleEditMode = this.handleToggleEditMode.bind(this);
+    this.changeStateloading = this.changeStateloading.bind(this);
   }
   componentWillReceiveProps() {
     this.setState({
@@ -26,9 +25,6 @@ class RepositoryView extends Component {
   }
   render() {
     const { id, name } = this.props;
-    const inputStyle = {
-      display: 'none'
-    }
     const classNameLoader = (this.state.loading ? 'active ' : '') + 'ui dimmer';
     const classNameEdit = (this.state.edit ? 'active ' : '') + 'item';
 
@@ -41,13 +37,9 @@ class RepositoryView extends Component {
         ) : (
           <div>
             <div className="ui top attached menu">
-              <div className="header item">{name}: </div>
-              <a className="item" onClick={this.handleRemoveRepository}>Remove repository</a>
-              <a className="item" onClick={this.handleSelectFiles}>
-                Add files
-                <input type="file" multiple style={inputStyle} onChange={this.handleChangeInputFile} />
-              </a>             
-              <a className={classNameEdit} onClick={this.handleToggleEditMode}>Edit files</a>
+              <div className="header item">{name}</div>
+              <a className="item" onClick={this.handleRemoveRepository}>Remove repository</a>                          
+              <a className={classNameEdit} onClick={this.handleToggleEditMode}>Edit mode</a>
             </div>
             <div className="ui attached segment">
               {this.renderFilesList()}
@@ -61,11 +53,11 @@ class RepositoryView extends Component {
     )
   }
   renderFilesList() {
-    const { files } = this.props;
+    const { id, files } = this.props;
 
     if(files && files.length > 0) {
       return(
-        <ManageFiles files={files} editMode={this.state.edit}/>
+        <ManageFiles repositoryId={id} files={files} editMode={this.state.edit} changeStateloading={this.changeStateloading}/>
       )
     }
   }
@@ -73,18 +65,6 @@ class RepositoryView extends Component {
     this.setState({
       loading: isLoading
     })
-  }
-  handleSelectFiles(event) {
-    const el = event.currentTarget;
-
-    el.querySelector('input').click();
-  }
-  handleChangeInputFile(event) {
-    const { id, addFiles } = this.props;
-
-    this.changeStateloading(true);
-    addFiles(event.target.files, id)
-      .then(() => this.changeStateloading(false));
   }
   handleToggleEditMode() {
     this.setState(prevState => ({
@@ -116,7 +96,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ addFiles, removeFiles, removeRepository }, dispatch)
+  return bindActionCreators({ removeFiles, removeRepository }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RepositoryView)

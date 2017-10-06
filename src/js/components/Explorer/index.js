@@ -3,13 +3,16 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ItemRepository from './ItemRepository';
 import ModalNewRepository from './ModalNewRepository';
-import { addRepository, fetchRepositories } from '../../actions/repositoryActions';
+import { fetchRepositories } from '../../actions/repositoryActions';
 import { fetchFiles } from '../../actions/fileActions';
 import { REPOSITORY } from '../../constants/contentTypes.js';
 
 class Explorer extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      showModalNewRepository: false
+    }
     this.handleClickNewRepository = this.handleClickNewRepository.bind(this);
   }
   componentDidMount() {
@@ -36,7 +39,7 @@ class Explorer extends Component {
             {this.renderListRepositories()}
           </div>
         </div>  
-        <ModalNewRepository />
+        <ModalNewRepository visible={this.state.showModalNewRepository}/>
       </div>
     )
   }
@@ -53,15 +56,9 @@ class Explorer extends Component {
     })
   }
   handleClickNewRepository() {
-    $('#newRepositoryModal')
-      .modal({
-        blurring: true,
-        onApprove: () => {
-          const name = $('input[name="repository-name"]').val();
-          this.props.addRepository({ name })
-        }
-      })
-      .modal('show');
+    this.setState({
+      showModalNewRepository: true
+    })
   }
 }
 
@@ -75,7 +72,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ addRepository, fetchFiles, fetchRepositories }, dispatch);
+  return bindActionCreators({ fetchFiles, fetchRepositories }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Explorer)

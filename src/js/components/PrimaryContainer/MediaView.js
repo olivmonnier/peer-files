@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { createObjectUrl } from '../../utils/uint8array';
 import { uncompress } from '../../utils/buffer';
-import { removeFile } from '../../actions/fileActions';
 import { IMAGE } from '../../constants/contentTypes';
+import { selectRepository } from '../../actions/repositoryActions';
+import { removeFile } from '../../actions/fileActions';
 
 class MediaView extends Component {
   constructor(props) {
@@ -15,6 +16,7 @@ class MediaView extends Component {
       removed: false
     }
     this.handleRemove = this.handleRemove.bind(this);
+    this.handleSelectRepository = this.handleSelectRepository.bind(this);
   }
   componentDidMount() {
     this.setUrlStateContent(this.props.buffer)
@@ -26,7 +28,7 @@ class MediaView extends Component {
     this.setUrlStateContent(nextProps.buffer);
   }
   render() {
-    const { name, type } = this.props;
+    const { name, type, repository } = this.props;
     const typeUpper = type.toUpperCase();
     const classNameLoader = (this.state.loading ? 'active ' : '') + 'ui dimmer';
 
@@ -39,7 +41,13 @@ class MediaView extends Component {
         ) : (
             <div>
               <div className="ui top attached menu">
-                <div className="header item">{name}: </div>
+                <div className="header item">
+                  <div className="ui breadcrumb">
+                    <a className="section" onClick={this.handleSelectRepository}>{repository.name}</a>
+                    <i className="right angle icon divider"></i>
+                    <div className="active section">{name}</div>
+                  </div>
+                </div>
                 <a id="btRemoveFile" className="item" onClick={this.handleRemove}>
                   Delete file
               </a>
@@ -72,6 +80,11 @@ class MediaView extends Component {
     createObjectUrl(content)
       .then(url => this.setState({ url }));
   }
+  handleSelectRepository() {
+    const { repository, selectRepository } = this.props;
+
+    selectRepository(repository);
+  }
   handleRemove(event) {
     const { id, repositoryId, removeFile } = this.props;
 
@@ -86,8 +99,15 @@ class MediaView extends Component {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ removeFile }, dispatch)
+function mapStateToProps(state) {
+  const repositoryId = state.selectedInExplorer.file.repositoryId;
+  const repository = state.repositories.filter(repo => repo.id === repositoryId)[0];
+
+  return { repository }
 }
 
-export default connect(null, mapDispatchToProps)(MediaView);
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ removeFile, selectRepository }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MediaView);

@@ -1,27 +1,37 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import Modal from '../Modal';
+import { addRepository } from '../../actions/repositoryActions';
 
-export default class ModalNewRepository extends Component {
+class ModalNewRepository extends Component {
+  constructor(props) {
+    super(props);
+    this.handleApprove = this.handleApprove.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
+  }
   render() {
+    const { visible } = this.props;
+    
     return (
-      <div className="ui basic modal" id="newRepositoryModal">
-        <div className="ui header">
-          New Repository
+      <Modal header={"New Repository"} visible={visible} approveAction={this.handleApprove} cancelAction={this.handleCancel}>
+        <div className="ui left icon fluid input">
+          <input ref={input => this.input = input} type="text" name="repository-name" placeholder="Repository name" />
+          <i className="folder icon"></i>
         </div>
-        <div className="content">
-          <div className="ui left icon fluid input">
-            <input type="text" name="repository-name" placeholder="Repository name" />
-            <i className="folder icon"></i>
-          </div>
-        </div>
-        <div className="actions">
-          <div className="ui red basic cancel inverted button">
-            <i className="remove icon"></i> Cancel
-              </div>
-          <div className="ui green ok inverted button">
-            <i className="checkmark icon"></i> Save
-              </div>
-        </div>
-      </div> 
+      </Modal>
     )
   }
+  handleApprove() {
+    const name = this.input.value;
+    this.props.addRepository({ name })
+  }
+  handleCancel() {
+  }
 }
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ addRepository }, dispatch);
+}
+
+export default connect(null, mapDispatchToProps)(ModalNewRepository)
